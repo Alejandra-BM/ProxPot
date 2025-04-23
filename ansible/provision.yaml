@@ -1,0 +1,42 @@
+---
+- name: Prepare Ubuntu VM with QEMU Guest Agent and Docker
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: update apt cache
+      command: apt update
+
+    - name: Install QEMU Guest Agent
+      apt:
+        name: qemu-guest-agent
+        state: present
+
+    - name: upgrade all packages
+      command: apt upgrade -y
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Install Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+        
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Reboot host
+      reboot:
