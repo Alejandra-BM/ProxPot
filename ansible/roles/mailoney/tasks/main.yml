@@ -1,0 +1,44 @@
+- name: Create mailoney docker directory
+  file:
+    path: /opt/mailoney
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose file
+  copy:
+    src: docker-compose.yml
+    dest: /opt/mailoney/docker-compose.yml
+    mode: '0644'
+
+- name: Ensure Docker is installed
+  apt:
+    name: docker.io
+    state: present
+
+- name: Ensure docker-compose is installed
+  apt:
+    name: docker-compose
+    state: present
+
+- name: Start Mailoney containers
+  community.docker.docker_compose:
+    project_src: /opt/mailoney
+    state: present
+    restarted: yes
+  register: mailoney_result
+
+# - name: Wait for mailoney to be healthy
+#   wait_for:
+#     port: 25
+#     host: 127.0.0.1
+#     delay: 5
+#     timeout: 30
+
+# # Optional: Display container logs (useful for debug)
+# - name: Show mailoney logs (optional)
+#   command: docker-compose logs -f mailoney
+#   args:
+#     chdir: /opt/mailoney
+#   when: mailoney_result.changed
+#   async: 60
+#   poll: 0
