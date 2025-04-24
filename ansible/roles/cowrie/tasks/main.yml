@@ -1,0 +1,41 @@
+---
+- name: Clone Cowrie repository
+  git:
+    repo: 'https://github.com/cowrie/cowrie.git'
+    dest: /opt/cowrie
+    version: main  # Specify the branch or tag if needed
+
+- name: Upload the modified docker-compose.yml
+  copy:
+    src: ../files/docker-compose.yml  # Specify the local path of your modified docker-compose.yml
+    dest: /opt/cowrie/docker/docker-compose.yml  # Specify the destination on the remote server
+    mode: '0644'  # Optional: specify permissions if needed
+
+# - name: Upload the modified Dockerfile #ERROR WHEN UPLOADING MY DOCKERFILE
+#   copy:
+#     src: ../files/Dockerfile # Specify the local path of your modified docker-compose.yml
+#     dest: /opt/cowrie/docker/Dockerfile # Specify the destination on the remote server
+#     mode: '0644'  # Optional: specify permissions if needed
+
+- name: Ensure Docker is installed
+  apt:
+    name: docker.io
+    state: present
+
+- name: Ensure docker-compose is installed
+  apt:
+    name: docker-compose
+    state: present
+
+- name: Build Docker container
+  docker_compose:
+    project_src: /opt/cowrie/docker
+    build: yes
+    state: present
+
+- name: Run Cowrie container
+  docker_compose:
+    project_src: /opt/cowrie/docker
+    state: present
+
+#whats left for cowrie: personalization manually !!!! after everything's done
