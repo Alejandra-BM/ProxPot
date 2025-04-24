@@ -1,0 +1,8 @@
+---
+- name: Deploy Honeypots with Docker
+  hosts: vm0
+  become: yes
+  roles:
+    - cowrie
+    # - dionaea
+    # - mailoney
