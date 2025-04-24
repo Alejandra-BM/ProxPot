@@ -105,7 +105,6 @@
   become: yes
 
 - name: Ensure dionaea is started with the right options
-  shell: |
-    nohup sudo /opt/dionaea/bin/dionaea -l all,-debug -L '*' > /opt/dionaea/log/dionaea2.log 2>&1 &
+  shell: sudo /opt/dionaea/bin/dionaea -D -l all,-debug -L '*' 
   become: yes
   ignore_errors: yes
