@@ -102,4 +102,4 @@ Once the playbook finishes, the honeypot services should be up and running.
 
 ## ⚖️ License
 
-This project is open-source and free to use under the MIT License.
+This project is part of my final thesis and is not publicly licensed for use, modification, or distribution until it has been officially submitted and presented.
