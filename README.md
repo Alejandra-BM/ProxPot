@@ -1,48 +1,105 @@
-# PROXMOX VE – Automated VM Honeypot Setup
-These VMs contain the template Ubuntu 22.04. Done by following these steps: https://pve.proxmox.com/wiki/Cloud-Init_Support#_preparing_cloud_init_templates. 
+# **Proxmox VE – Automated VM Honeypot Setup**
 
-Please, do before the Terraform script, and follow these steps in the PROXMOX VE host.
-```bash
-wget https://cloud-images.ubuntu.com/min...lease/ubuntu-22.04-minimal-cloudimg-amd64.img
-```
-```bash
-qm create 9000 --memory 2048 --net0 virtio,bridge=vmbr0 --scsihw virtio-scsi-pci
+This project automates the deployment and provisioning of honeypot virtual machines using **Proxmox VE**, **Terraform**, and **Ansible**.
 
-```
-```bash
-qm set 9000 --scsi0 local-lvm:0,import-from=/root/ubuntu-22.04-minimal-cloudimg-amd64.img
-```
+---
 
-```bash
-qm set 9000 --ide2 local-lvm:cloudinit
-```
-```bash
-qm set 9000 --boot order=scsi0
-```
-```bash
-qm set 9000 --serial0 socket --vga serial0
-```
-```bash
-qm template 9000
-```
-This should result in a template, called VM 9000. Once the template appears in PROXMOX, its ready to use and the Terraform script will use it to make the VMs.
+## 🖥️ Base VM Template Setup (Ubuntu 22.04)
 
-Deploy VMs using the Terraform script, located in ./tf
-```bash
-terraform apply
-```
+Before running the Terraform script, follow these steps on your **Proxmox VE host** to create a cloud-init-enabled VM template:
+
+1. Download the Ubuntu 22.04 minimal cloud image:
+
+   ```bash
+   wget https://cloud-images.ubuntu.com/minimal/releases/jammy/release/ubuntu-22.04-minimal-cloudimg-amd64.img
+   ```
+
+2. Create a new VM:
+
+   ```bash
+   qm create 9000 --memory 2048 --net0 virtio,bridge=vmbr0 --scsihw virtio-scsi-pci
+   ```
+
+3. Import the disk image:
+
+   ```bash
+   qm set 9000 --scsi0 local-lvm:0,import-from=/root/ubuntu-22.04-minimal-cloudimg-amd64.img
+   ```
+
+4. Attach cloud-init drive:
+
+   ```bash
+   qm set 9000 --ide2 local-lvm:cloudinit
+   ```
+
+5. Set the boot order and enable serial console:
+
+   ```bash
+   qm set 9000 --boot order=scsi0
+   qm set 9000 --serial0 socket --vga serial0
+   ```
+
+6. Convert the VM to a template:
+
+   ```bash
+   qm template 9000
+   ```
+
+This results in a base template (VM ID `9000`) ready to be used by Terraform for dynamic VM creation.
+
+---
+
+## ⚙️ Deploying VMs with Terraform
+
+Navigate to the `./tf` directory and run:
+
 ```bash
 terraform plan
-```
-```bash
-terraform deploy
+terraform apply
 ```
 
-For provisioning, use the ansible playbook (in ./ansible) called provision.yaml to install the qemu-guest-agent and docker. You can choose which VM to provision, one or all (inventory.ini for references).
+---
+
+## 🔧 Provisioning VMs with Ansible
+
+Use the `provision.yaml` playbook located in `./ansible` to install required tools like `qemu-guest-agent` and `Docker`.
+
+Provision a single VM:
+
 ```bash
 ansible-playbook -i inventory.ini provision.yaml -l vm1 -u ubuntu
 ```
-To import all honeypots to the VM and start them. When the playbook is finished, all services should work. 
+
+Provision all honeypots (as defined in the `honeypots` group in `inventory.ini`):
+
+```bash
+ansible-playbook -i inventory.ini provision.yaml -l honeypots -u ubuntu
+```
+
+---
+
+## 🍯 Deploying Honeypots
+
+To install and start all honeypot services on the provisioned VMs:
+
 ```bash
 ansible-playbook playbook.yml -i inventory.ini -u ubuntu
 ```
+
+Once the playbook finishes, the honeypot services should be up and running.
+
+---
+
+## 🚀 Requirements
+
+- Proxmox VE installed on host machine
+- Terraform
+- Ansible
+- Ubuntu 22.04 cloud image
+- Internet access for VMs (for downloading packages)
+
+---
+
+## ⚖️ License
+
+This project is open-source and free to use under the MIT License.
