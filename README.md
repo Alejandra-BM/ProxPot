@@ -42,3 +42,7 @@ For provisioning, use the ansible playbook (in ./ansible) called provision.yaml 
 ```bash
 ansible-playbook -i inventory.ini provision.yaml -l vm1 -u ubuntu
 ```
+To import all honeypots to the VM and start them. When the playbook is finished, all services should work. 
+```bash
+ansible-playbook playbook.yml -i inventory.ini -u ubuntu
+```
