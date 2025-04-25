@@ -1,4 +1,4 @@
-# PROXMOX VM Honeypot Automatization
+# PROXMOX VE – Automated VM Honeypot Setup
 These VMs contain the template Ubuntu 22.04. Done by following these steps: https://pve.proxmox.com/wiki/Cloud-Init_Support#_preparing_cloud_init_templates. 
 
 Please, do before the Terraform script, and follow these steps in the PROXMOX VE host.
