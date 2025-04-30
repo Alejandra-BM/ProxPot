@@ -1,0 +1,32 @@
+---
+- name: Ensure cowrieCopy.sh script is present
+  copy:
+    src: cowrieCopy.sh
+    dest: /usr/local/bin/cowrieCopy.sh
+    mode: '0755'
+
+- name: Ensure cron is installed
+  apt:
+    name: cron
+    state: present
+    update_cache: yes
+
+- name: Ensure mailoneyCopy.sh script is present
+  copy:
+    src: mailoneyCopy.sh
+    dest: /usr/local/bin/mailoneyCopy.sh
+    mode: '0755'
+
+- name: Add cronjob to copy Cowrie log every minute
+  cron:
+    name: "Sync Cowrie log from Docker"
+    user: root
+    minute: "*"
+    job: "/usr/local/bin/cowrieCopy.sh >/dev/null 2>&1"
+
+- name: Add cronjob to copy Mailoney log every minute
+  cron:
+    name: "Copy Mailoney log to shared location"
+    user: root
+    minute: "*"
+    job: "/usr/local/bin/mailoneyCopy.sh"
