@@ -3,6 +3,8 @@
   hosts: vm0
   become: yes
   roles:
+    - fluentd
     - cowrie
-    # - dionaea
-    # - mailoney
+    - cron
+    - dionaea
+    - mailoney
