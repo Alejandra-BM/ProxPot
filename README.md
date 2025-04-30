@@ -11,7 +11,7 @@
 </pre>
 </div>
 
-# **Proxmox VE – Automated VM Honeypot Setup**
+# **ProxPot – Automated VM Honeypot Setup**
 
 This project automates the deployment and provisioning of honeypot virtual machines using **Proxmox VE**, **Terraform**, and **Ansible**.
 
