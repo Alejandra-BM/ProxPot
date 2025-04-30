@@ -104,6 +104,39 @@
     state: present
   become: yes
 
+# Maybe the path to getting JSON to work is a bit chaotic, but it’s the way it worked for me
+- name: Remove log_sqlite.yaml from enabled handlers
+  file:
+    path: /opt/dionaea/etc/dionaea/ihandlers-enabled/log_sqlite.yaml
+    state: absent
+  become: yes
+
+- name: Remove dionaea.sqlite from enabled handlers
+  file:
+    path: /opt/dionaea/var/lib/dionaea/dionaea.sqlite
+    state: absent
+  become: yes
+
+- name: Configure Dionaea JSON logging handler in the available directory
+  copy:
+    dest: "/opt/dionaea/etc/dionaea/ihandlers-available/log_json.yaml"
+    content: |
+      - name: log_json
+        config:
+          # Uncomment next line to flatten object lists to work with ELK
+          flat_data: true
+          handlers:
+            - file:///opt/dionaea/var/lib/dionaea/dionaea.json
+  become: yes
+
+# Ensure the symbolic link for log_json.yaml is created in the enabled directory
+- name: Ensure symbolic link for log_json.yaml is created in the enabled directory
+  file:
+    src: /opt/dionaea/etc/dionaea/ihandlers-available/log_json.yaml
+    dest: /opt/dionaea/etc/dionaea/ihandlers-enabled/log_json.yaml
+    state: link
+  become: yes
+
 - name: Ensure dionaea is started with the right options
   shell: sudo /opt/dionaea/bin/dionaea -D -l all,-debug -L '*' 
   become: yes
