@@ -1,0 +1,37 @@
+---
+- name: Ensure Fluentd config directory exists
+  file:
+    path: /opt/fluentd/conf
+    state: directory
+    mode: '0755'
+
+- name: Copy Fluentd configuration for honeypot forwarding
+  copy:
+    src: fluent.conf
+    dest: /opt/fluentd/conf/fluent.conf
+    mode: '0644'
+
+- name: Ensure the /fluentd/log/ directory exists
+  file:
+    path: /fluentd/log
+    state: directory
+    mode: '0755'     # Standard directory permissions
+
+- name: Ensure fluentd position file is writable by any user
+  file:
+    path: /fluentd/log/honeypot.pos
+    state: touch
+    mode: '0664'
+
+
+- name: Run Fluentd forwarder container for honeypot logs
+  community.docker.docker_container:
+    name: fluentd-forwarder
+    image: fluent/fluentd:v1.14-1
+    state: started
+    user: root
+    restart_policy: always
+    volumes:
+      - /opt/cowrie/var/log/cowrie:/fluentd/log
+      - /opt/fluentd/conf/fluent.conf:/fluentd/etc/fluent.conf
+    detach: true
