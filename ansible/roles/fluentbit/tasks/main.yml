@@ -1,0 +1,25 @@
+---
+- name: Install Fluent Bit from official install script
+  shell: |
+    curl https://raw.githubusercontent.com/fluent/fluent-bit/master/install.sh | sh
+  args:
+    creates: /opt/fluent-bit/bin/fluent-bit
+
+- name: Ensure Fluent Bit config directory exists
+  file:
+    path: /etc/fluent-bit
+    state: directory
+    mode: '0755'
+
+- name: Copy Fluent Bit configuration file
+  copy:
+    src: fluent-bit.conf
+    dest: /etc/fluent-bit/fluent-bit.conf
+    mode: '0644'
+
+- name: Enable and start Fluent Bit
+  systemd:
+    name: fluent-bit
+    enabled: yes
+    state: started
+
