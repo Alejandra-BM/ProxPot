@@ -28,5 +28,5 @@
   cron:
     name: "Copy Mailoney log to shared location"
     user: root
-    minute: "*"
+    minute: "*/2"
     job: "/usr/local/bin/mailoneyCopy.sh"
