@@ -1,10 +1,11 @@
 ---
-- name: Deploy Honeypots with Docker
-  hosts: vm0
-  become: yes
+- name: Deploy Honeypots
+  hosts: vm1
+  become: true
   roles:
     - cowrie
     - dionaea
     - mailoney
     - cron
-    - fluentd
+    - fluentbit
+
