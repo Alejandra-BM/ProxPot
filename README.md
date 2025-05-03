@@ -98,8 +98,21 @@ To install and start all honeypot services on the provisioned VMs:
 ```bash
 ansible-playbook playbook.yml -i inventory.ini -u ubuntu
 ```
+### 📦 Playbook Overview
 
-Once the playbook finishes, the honeypot services should be up and running.
+The playbook includes **five roles**:
+
+1. **Honeypot Services**
+- Cowrie and Mailoney: Deployed via Docker
+- Dionaea: Installed natively on the host
+
+2. **Log Collection**
+- A cron job runs every 2 minutes to extract and convert logs from Cowrie and Mailoney containers into JSON files formatted for Fluent Bit.
+
+3. **Fluent Bit Setup**
+- Installs Fluent Bit on each small VM (as defined in inventory.ini) and configures it to forward logs to a central Fluentd instance on the main VM, which runs an EFK (Elasticsearch, Fluentd, Kibana) stack for log analysis.
+
+Once the playbook finishes, all honeypot services and the log pipeline should be fully operational.
 
 ---
 
