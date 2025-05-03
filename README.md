@@ -110,7 +110,7 @@ The playbook includes **five roles**:
 - A cron job runs every 2 minutes to extract and convert logs from Cowrie and Mailoney containers into JSON files formatted for Fluent Bit.
 
 3. **Fluent Bit Setup**
-- Installs Fluent Bit on each small VM (as defined in inventory.ini) and configures it to forward logs to a central Fluentd instance on the main VM, which runs an EFK (Elasticsearch, Fluentd, Kibana) stack for log analysis.
+- Installs Fluent Bit on each small VM (as defined in inventory.ini) and configures it to forward logs to a central Fluentd instance on the big VM, which runs an EFK (Elasticsearch, Fluentd, Kibana) stack for log analysis.
 
 Once the playbook finishes, all honeypot services and the log pipeline should be fully operational.
 
@@ -122,6 +122,7 @@ Once the playbook finishes, all honeypot services and the log pipeline should be
 - Terraform
 - Ansible
 - Ubuntu 22.04 cloud image
+- Big VM for log analysis (can also be made in PROXMOX)
 - Internet access for VMs (for downloading packages)
 
 ---
