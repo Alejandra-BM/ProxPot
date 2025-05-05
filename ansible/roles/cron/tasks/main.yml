@@ -11,6 +11,12 @@
     state: present
     update_cache: yes
 
+- name: Ensure jq is installed
+  apt:
+    name: jq
+    state: present
+    update_cache: yes
+
 - name: Ensure mailoneyCopy.sh script is present
   copy:
     src: mailoneyCopy.sh
@@ -84,3 +90,4 @@
     user: ubuntu
     minute: "*/2"
     job: "/usr/local/bin/dionaeaSync.sh >/dev/null 2>&1"
+
