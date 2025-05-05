@@ -21,7 +21,7 @@
   cron:
     name: "Sync Cowrie log from Docker"
     user: root
-    minute: "*"
+    minute: "*/2"
     job: "/usr/local/bin/cowrieCopy.sh >/dev/null 2>&1"
 
 - name: Add cronjob to copy Mailoney log every minute
@@ -29,4 +29,58 @@
     name: "Copy Mailoney log to shared location"
     user: root
     minute: "*/2"
-    job: "/usr/local/bin/mailoneyCopy.sh"
+    job: "/usr/local/bin/mailoneyCopy.sh >/dev/null 2>&1"
+
+## DIONAEA SYNC CONFIG
+
+- name: Ensure .ssh directory exists
+  file:
+    path: "/home/ubuntu/.ssh"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0700'
+
+- name: Copy pre-generated private key
+  copy:
+    src: id_rsa
+    dest: /home/ubuntu/.ssh/id_rsa
+    owner: ubuntu
+    group: ubuntu
+    mode: '0600'
+
+- name: Copy pre-generated public key
+  copy:
+    src: id_rsa.pub
+    dest: /home/ubuntu/.ssh/id_rsa.pub
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+
+- name: Read the SSH public key content
+  command: cat /home/ubuntu/.ssh/id_rsa.pub
+  register: pubkey_content
+  changed_when: false
+
+- name: Install rsync
+  apt:
+    name: rsync
+    state: present
+    update_cache: yes
+
+- name: Ensure dionaeaSync.sh script is present
+  copy:
+    src: dionaeaSync.sh
+    dest: /usr/local/bin/dionaeaSync.sh
+    mode: '0755'
+
+- name: Change ownership of the bitstreams directory
+  command: chown -R ubuntu:ubuntu /opt/dionaea/var/lib/dionaea/bistreams/
+  become: yes
+
+- name: Add cronjob to copy Dionaea files every minute
+  cron:
+    name: "Copy Dionaea files to shared location"
+    user: ubuntu
+    minute: "*/2"
+    job: "/usr/local/bin/dionaeaSync.sh >/dev/null 2>&1"
