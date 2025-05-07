@@ -133,11 +133,11 @@ Fluentd will automatically load its configuration from the `./efk/fluentd/conf` 
 
 ## 🚀 Requirements
 
-- Proxmox VE installed on host machine
+- Proxmox VE installed on host machine (only for the Terraform deployment)
 - Terraform
 - Ansible
 - Ubuntu 22.04 cloud image
-- Big VM for log analysis (can also be made in PROXMOX)
+- Sandbox (big VM) for log analysis
 - Internet access for VMs (for downloading packages)
 
 ---
