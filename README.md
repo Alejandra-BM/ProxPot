@@ -116,6 +116,13 @@ Once the playbook finishes, all honeypot services and the log pipeline should be
 
 ---
 
+## ⌛ Sandbox
+
+The big VM, considered the sandbox where all the files and logs are collected, has been made as a normal VM and follows this setup of EFK stack:
+https://adamtheautomator.com/efk-stack/
+
+---
+
 ## 🚀 Requirements
 
 - Proxmox VE installed on host machine
