@@ -118,8 +118,16 @@ Once the playbook finishes, all honeypot services and the log pipeline should be
 
 ## ⌛ Sandbox
 
-The big VM, considered the sandbox where all the files and logs are collected, has been made as a normal VM and follows this setup of EFK stack:
-https://adamtheautomator.com/efk-stack/
+The main virtual machine, acting as a sandbox for collecting files and logs, is a standard VM configured with the **EFK stack** (Elasticsearch, Fluentd, Kibana), following the setup described [here](https://adamtheautomator.com/efk-stack/).
+
+To launch the EFK stack, navigate to the `./efk` directory and run:
+
+```bash
+docker-compose up
+```
+
+This command will start the Docker containers for **Elasticsearch, Fluentd,** and **Kibana**.
+Fluentd will automatically load its configuration from the `./efk/fluentd/conf` directory.
 
 ---
 
