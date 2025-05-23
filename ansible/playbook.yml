@@ -1,6 +1,6 @@
 ---
 - name: Deploy Honeypots
-  hosts: vm1
+  hosts: honeypots
   become: true
   roles:
     - cowrie
@@ -8,4 +8,3 @@
     - mailoney
     - cron
     - fluentbit
-
