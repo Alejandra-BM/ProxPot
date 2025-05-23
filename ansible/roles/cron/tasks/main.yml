@@ -90,4 +90,3 @@
     user: ubuntu
     minute: "*/2"
     job: "/usr/local/bin/dionaeaSync.sh >/dev/null 2>&1"
-
