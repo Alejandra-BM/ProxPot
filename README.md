@@ -13,7 +13,7 @@
 
 # **ProxPot – Automated VM Honeypot Setup**
 
-This project automates the deployment and provisioning of honeypot virtual machines using **Proxmox VE**, **Terraform**, and **Ansible**.
+This project automates the deployment and provisioning of honeypot virtual machines using **Proxmox VE**, **Terraform**, and **Ansible**. It also includes the configuration of a sandbox environment with **EFK** for viewing logs and performing thorough analysis of attacks.
 
 ---
 
@@ -80,7 +80,7 @@ Use the `provision.yaml` playbook located in `./ansible` to install required too
 Provision a single VM:
 
 ```bash
-ansible-playbook -i inventory.ini provision.yaml -l vm1 -u ubuntu
+ansible-playbook -i inventory.ini provision.yaml -l vm0 -u ubuntu
 ```
 
 Provision all honeypots (as defined in the `honeypots` group in `inventory.ini`):
@@ -106,8 +106,10 @@ The playbook includes **five roles**:
 - Cowrie and Mailoney: Deployed via Docker
 - Dionaea: Installed natively on the host
 
+**Cowrie** emulates an SSH server, exposing port 2222. **Mailoney** simulates an SMTP server on port 25. **Dionaea** exposes ports 21 and 80, acting as both an FTP and HTTP server.
+
 2. **Log Collection**
-- A cron job runs every 2 minutes to extract and convert logs from Cowrie and Mailoney containers into JSON files formatted for Fluent Bit.
+- A cron job runs every 2 minutes to extract and convert logs from Cowrie and Mailoney containers into JSON files formatted for Fluent Bit. It also
 
 3. **Fluent Bit Setup**
 - Installs Fluent Bit on each small VM (as defined in inventory.ini) and configures it to forward logs to a central Fluentd instance on the big VM, which runs an EFK (Elasticsearch, Fluentd, Kibana) stack for log analysis.
@@ -120,7 +122,7 @@ Once the playbook finishes, all honeypot services and the log pipeline should be
 
 The main virtual machine, acting as a sandbox for collecting files and logs, is a standard VM configured with the **EFK stack** (Elasticsearch, Fluentd, Kibana), following the setup described [here](https://adamtheautomator.com/efk-stack/).
 
-To launch the EFK stack, navigate to the `./efk` directory and run:
+To launch the EFK stack, navigate to the `./sandbox/efk` directory and run:
 
 ```bash
 docker-compose up
@@ -128,6 +130,13 @@ docker-compose up
 
 This command will start the Docker containers for **Elasticsearch, Fluentd,** and **Kibana**.
 Fluentd will automatically load its configuration from the `./efk/fluentd/conf` directory.
+TLS is enabled to secure communication, which is especially important when working with cloud services.
+
+---
+
+## 🔧 Tools
+
+In `./tools` here are Python scripts that extract bistream data from Dionaea and playlog information from Cowrie. These tools are useful for conducting deeper analysis of attacker behavior and intelligence.
 
 ---
 
@@ -137,6 +146,7 @@ Fluentd will automatically load its configuration from the `./efk/fluentd/conf` 
 - Terraform
 - Ansible
 - Ubuntu 22.04 cloud image
+- Exposed ports
 - Sandbox (big VM) for log analysis
 - Internet access for VMs (for downloading packages)
 
