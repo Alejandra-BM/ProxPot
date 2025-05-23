@@ -13,8 +13,24 @@ RUN apk add --no-cache --update --virtual .build-deps \
  && sudo gem sources --clear-all \
  && apk del .build-deps \
  && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
+
+# Create directory for certificates
+RUN mkdir -p /fluentd/cert && \
+    chown -R fluent:fluent /fluentd/cert
+
 # copy fluentd configuration from host image
 COPY ./conf/fluent.conf /fluentd/etc/
+
+# copy TLS certificates and keys
+COPY ./cert/fluentd.crt /fluentd/cert/
+COPY ./cert/fluentd.key /fluentd/cert/
+COPY ./cert/shared_key.txt /fluentd/cert/
+
+# Set proper permissions for certificate files
+RUN chmod 644 /fluentd/cert/fluentd.crt && \
+    chmod 600 /fluentd/cert/fluentd.key /fluentd/cert/shared_key.txt && \
+    chown -R fluent:fluent /fluentd/cert/
+
 # copy binary start file
 COPY entrypoint.sh /bin/
 
