@@ -12,9 +12,15 @@
     mode: '0755'
 
 - name: Copy Fluent Bit configuration file
-  copy:
-    src: fluent-bit.conf
+  template:
+    src: fluent-bit.conf.j2 #CHANGED TO TRY TEMPLATE!!
     dest: /etc/fluent-bit/fluent-bit.conf
+    mode: '0644'
+
+- name: Copy Fluentd TLS certificate
+  copy:
+    src: fluentd.crt
+    dest: /etc/fluent-bit/fluentd.crt
     mode: '0644'
 
 - name: Enable and start Fluent Bit
