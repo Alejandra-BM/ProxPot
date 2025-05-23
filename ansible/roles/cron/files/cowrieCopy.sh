@@ -41,3 +41,15 @@ if [ -f "$TEMP_FILE" ]; then
 else
     echo "Failed to copy from container"
 fi
+
+# Remove the folder if it exists to avoid flooding
+rm -rf /tmp/cowrie-downloads/
+
+# Create the folder again to copy files into it
+mkdir -p /tmp/cowrie-downloads/
+
+# Copy the downloads folder fresh from container
+docker cp docker_cowrie_1:/cowrie/cowrie-git/var/lib/cowrie/downloads/ /tmp/cowrie-downloads/
+
+# Sync new files to /opt/cowrie/logs using rsync to avoid duplicates
+rsync -av --ignore-existing /tmp/cowrie-downloads/ /opt/cowrie/logs/
