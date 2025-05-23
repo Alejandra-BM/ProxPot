@@ -15,6 +15,21 @@
     version: master
   become: yes
 
+- name: Set public IP and fixed passive port in Dionaea FTP server
+  replace:
+    path: "/home/{{ ansible_user }}/dionaea/modules/python/dionaea/ftp.py"
+    regexp: |
+      (\s+)self\.dtf = FTPDataListen\(host=self\.local\.host, port=0, ctrl=self\)
+      \1host = self\.dtf\.local\.host
+      \1port = self\.dtf\.local\.port
+      \1self\.reply\("entering_pasv_mode", host=encodeHostPort\(host, port\)\)
+    replace: |
+      \1self.dtf = FTPDataListen(host="0.0.0.0", port={{ ftp_port }}, ctrl=self)
+      \1host = "{{ public_ip }}"
+      \1port = self.dtf.local.port
+      \1self.reply("entering_pasv_mode", host=encodeHostPort(host, port))
+  become: yes
+
 - name: Create Downloads directory
   file:
     path: "/home/{{ ansible_user }}/Downloads"
@@ -100,7 +115,7 @@
   lineinfile:
     path: /opt/dionaea/etc/dionaea/dionaea.cfg
     regexp: '^modules='
-    line: 'modules=curl,python,emu,ftp'
+    line: 'modules=curl,python,emu,ftp,http'
     state: present
   become: yes
 
