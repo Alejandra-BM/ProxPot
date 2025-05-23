@@ -129,7 +129,7 @@ docker-compose up
 ```
 
 This command will start the Docker containers for **Elasticsearch, Fluentd,** and **Kibana**.
-Fluentd will automatically load its configuration from the `./efk/fluentd/conf` directory.
+Fluentd will automatically load its configuration from the `./sandbox/efk/fluentd/conf` directory.
 TLS is enabled to secure communication, which is especially important when working with cloud services.
 
 ---
