@@ -152,17 +152,9 @@ In `./tools` here are Python scripts that extract bistream data from Dionaea and
 
 ---
 
-## 🧠 How Does It Work?
-
-The architecture of the deployments look like this:
-
-![Deployment Architecture](https://github.com/user-attachments/assets/ee7a8049-e604-4245-b7f9-0bb4a6575577)
-
----
-
 ## 🎯 Modular Environment in Action
 
-Here's how everything works when an attacker takes the bait:
+As mentioned, there will therefore be two deployments (in Azure and Proxmox), with a total of three VMs. Here's how everything works when an attacker takes the bait:
 
 ![Modular Environment Working Example](https://github.com/user-attachments/assets/8713b51a-f46a-4128-9537-2ebf6f399b56)
 
