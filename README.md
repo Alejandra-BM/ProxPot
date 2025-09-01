@@ -156,7 +156,7 @@ In `./tools` here are Python scripts that extract bistream data from Dionaea and
 
 As mentioned, there will therefore be two deployments (in Azure and Proxmox), with a total of three VMs. Here's how everything works when an attacker takes the bait:
 
-![Modular Environment Working Example](<img width="6948" height="4164" alt="image" src="https://github.com/user-attachments/assets/bfea2f60-9c5e-431a-b507-8a42eb98a5cd" />)
+![Modular Environment Working Example](<img width="1716" height="1021" alt="ProxPot" src="https://github.com/user-attachments/assets/4077192a-d94f-4b23-ba46-496358c5ed1a" />)
 
 ---
 
